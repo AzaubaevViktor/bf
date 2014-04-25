@@ -1,0 +1,9 @@
+{
+	"name": "bf",
+	"description": "Brainfuck interpreter",
+	"copyright": "Copyright © 2014, ktulhy",
+	"authors": ["ktulhy"],
+	"dependencies": {
+		"pegged": "~master"
+	}
+}
