@@ -51,7 +51,7 @@ Parser:
     IfEqCharOperand < "ifeqchar('" Char "'," Number ')' '{' Code '}' '{' Code '}'
 
     SetOperand < 'set(' Number ',' Number ')'
-    SetCharOperator < "setchar('" Char "'," Number ')'
+    SetCharOperator < "setchar(" Number ",'" Char "')"
 
     AddOptimise <~ '+'+
     SubOptimise <~ '-'+
@@ -170,7 +170,7 @@ class BrainFuck {
                     j++;
                     k = to!long(parseTree[j]);
                     j++;
-                    this.parseString(format("set(0,%d)add(%d)", k, k,));
+                    this.parseString(format("set(%d,0)add(%d)", k, k,));
                     break;
                 case 'c': // copy
                     j++;
@@ -193,10 +193,10 @@ class BrainFuck {
                         j++;
 
                         this.parseString(
-                            format("set(1,%d)",t) ~
+                            format("set(%d,1)",t) ~
                             "[" ~
                                 prgT ~
-                                format("set(0,%d)",t) ~
+                                format("set(%d,0)",t) ~
                                 "[-]" ~
                             "]" ~
                             format("@(%d)",t) ~
@@ -216,7 +216,7 @@ class BrainFuck {
                         j+=2;
                         prgF = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
                         j++;
-                        this.parseString(format("addN(%d,%d)ifelse(%d){%s}{%s}addN(%d,%d)",-N,t,t,prgF,prgT,N,t));
+                        this.parseString(format("addN(%d,%d)ifelse(%d){%s}{%s} addN(%d,%d)",-N,t,t,prgF,prgT,N,t));
                     } else if ('c' == op[4]) { //ifeqchar
                         j++;
                         c = to!char(parseTree[j][0]);
@@ -233,9 +233,9 @@ class BrainFuck {
                 case 's': //set + setchar
                     if ('(' == op[3]) { //set
                         j++;
-                        v = to!long(parseTree[j]);
-                        j+=2;
                         k = to!long(parseTree[j]);
+                        j+=2;
+                        v = to!long(parseTree[j]);
                         j++;
 
                         this.parseString(format("@(%d)[-]", k));
@@ -243,11 +243,11 @@ class BrainFuck {
                         this.parseString(format("@(%d)", -k));
                     } else { //setchar
                         j++;
-                        c = to!char(parseTree[j][0]);
-                        j+=2;
                         k = to!long(parseTree[j]);
+                        j+=2;
+                        c = to!char(parseTree[j][0]);
                         j++;
-                        this.parseString(format("set(%d,%d)",c,k));
+                        this.parseString(format("set(%d,%d)",k,c));
                     }
                     break;
                 default:
@@ -429,17 +429,18 @@ unittest {
     { ++ }",
     "mov(12)",
     "0@(1)0copy(1,2)",
-    "set(12,1)",
-    "set(5,7)0++--set(0,10)",
+    "set(1,12)",
+    "set(7,5)0++--set(0,10)",
     "set(0,0)",
     "copy(0,0)",
     "mov(0)",
     "mov(1)",
-    "setchar(',',4)",
-    "setchar('...',4)",
-    "setchar(''',-1)",
+    "setchar(4,',')",
+    "setchar(4,'...')",
+    "setchar(-1,''')",
     "addN(12,3)",
     "ifeq(12,3){+++}{---}",
+    "ifeq(0,0){+}{-}"
     "ifeqchar('c',2){+++}{---}"];
 
     for (i=0; i<inp.length; i++) {
