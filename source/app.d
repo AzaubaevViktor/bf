@@ -33,39 +33,49 @@ class ParseError : Exception {
 
     mixin(grammar(`
 Parser:
-    Programm < Operand*
-    Code <~ Operand*
+    Programm < Operand* 
+    Code <~ Operand* / ""
 
     Number <~ NumSign [0-9]+
     NumSign <~ '-' / ''
-
-    ZeroOperand < '0'
-    MemOperand < '@(' Number ')'
-    AddOperand < 'add(' Number ')'
-    AddNOperand < 'addN(' Number ',' Number ')'
-    MovOperand < 'mov(' Number ')'
-    CopyOperand < 'copy(' Number ',' Number ')'
-
-    IfElseOperand < 'ifelse(' Number ')' '{' Code '}' '{' Code '}'
-    IfEqOperand < 'ifeq(' Number ',' Number ')' '{' Code '}' '{' Code '}'
-    IfEqCharOperand < "ifeqchar('" Char "'," Number ')' '{' Code '}' '{' Code '}'
-
-    SetOperand < 'set(' Number ',' Number ')'
-    SetCharOperator < "setchar(" Number ",'" Char "')"
 
     AddOptimise <~ '+'+
     SubOptimise <~ '-'+
     MemLeftOptimise <~ '<'+
     MemRightOptimise <~ '>'+
 
+    MemOperand < '@(' Variable ')'
+    ZeroOperand < "0"
+
+    AddOperand < 'add(' Variable ',' Variable ')'
+    AddSaveOperand < 'addsave(' Variable ',' Variable ',' Variable ')'
+    AddNOperand < 'addN(' Variable ',' Variable ')'
+
+    SetOperand < 'set(' Variable ',' Variable ')'
+    SetNOperand < 'setN(' Variable ',' Variable ')'
+
+    LoopOperand < 'loop(' Variable ')' '{' Code '}'
+    LoopForOperand < 'loopfor(' Variable ',' Variable ')' '{' Code '}'
+
+    MulOperand < 'mul(' Variable ',' Variable ',' Variable ')'
+
+    CopyOperand < 'copy(' Variable ',' Variable ',' Variable ')'
+
+    IfOperand < 'if(' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
+    IfEqOperand < 'ifeq(' Variable ',' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
+
     Char <~ .
+    Variable <~ Number / "'" Char "'" / ""
 
     Operand <- AddOptimise / SubOptimise / MemLeftOptimise / MemRightOptimise / '.' / ',' / '[' / ']'
     / MemOperand 
-    / AddOperand / AddNOperand
-    / ZeroOperand / MovOperand / CopyOperand 
-    / IfElseOperand / IfEqOperand / IfEqCharOperand
-    / SetOperand / SetCharOperator
+    / ZeroOperand
+    / AddOperand / AddSaveOperand / AddNOperand
+    / SetOperand / SetNOperand
+    / LoopOperand / LoopForOperand
+    / MulOperand
+    / CopyOperand
+    / IfOperand / IfEqOperand    
 `));
 
 
@@ -89,16 +99,31 @@ class BrainFuck {
 
     this() {}
 
+    public void resetState() {
+        this.mem[0..30000] = 0;
+        this.IP = 0;
+        this.MP = 0;
+        this.opcodes = [];
+        this.opCount = 0;
+    }
+
+    public long parseVar(string var){
+        if (0 == var.length) {
+            return 0;
+        }
+        if ('\'' == var[0]) {
+            return var[1];
+        }
+        return to!long(var);
+    }
+
     public int parseString(string str) {
         ulong i = 0;
         ulong[] opCycles;
         ulong lastType = 0;
         long N = 0;
-        long v = 0;
-        long k = 0;
-        long t = 0;
-        char c = '\0';
-        string prgT, prgF;
+        long k = 0, k1 = 0, k2 = 0;
+        string prgT, prgF, prg;
         string[] parseTree;
 
         foreach(int j, string op; Parser(str).matches) {
@@ -140,117 +165,37 @@ class BrainFuck {
                     opcodes ~= Opcode(6,0);
                     break;
                 //Non-standart syntax
-                case '0':
-                    this.parseString("[-]");
-                    break;
-                case '@':
-                    j++;
-                    opcodes ~= Opcode(2,to!long(parseTree[j]));
-                    j++;
-                    break;
-                case 'a': // add + addN
-                    if ('(' == op[3]) {//add
-                        j++;
-                        k = to!long(parseTree[j]);
-                        j++;
-                        this.parseString(format("[-@(%d)+@(%d)]", k, -k));
-                    } else { //addN
-                        j++;
-                        v = to!long(parseTree[j]);
-                        j+=2;
-                        k = to!long(parseTree[j]);
-                        j++;
-
-                        this.parseString(format("@(%d)", k));
-                        opcodes ~= Opcode(1, v);
-                        this.parseString(format("@(%d)", -k));  
-                    }
-                    break;
-                case 'm': // mov
-                    j++;
-                    k = to!long(parseTree[j]);
-                    j++;
-                    this.parseString(format("set(%d,0)add(%d)", k, k,));
-                    break;
-                case 'c': // copy
-                    j++;
-                    k = to!long(parseTree[j]);
-                    j+=2;
-                    t = to!long(parseTree[j]);
-                    j++;
-                    this.parseString(
-                              format("@(%d) [-] @(%d) [-] @(%d) [ - @(%d) + @(%d) + @(%d) ] @(%d) [ - @(%d) + @(%d) ]",
-                                         k,        t,       -k-t,      k,      t,     -k-t,    k+t,     -k-t,    k+t ));
-                    break;
-                case 'i': //ifelse
-                    if ('s' == op[4]) { //ifelse
-                        j++;
-                        t = to!long(parseTree[j]);
-                        j+=3;
-                        prgT = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
-                        j+=2;
-                        prgF = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
-                        j++;
-
-                        this.parseString(
-                            format("set(%d,1)",t) ~
-                            "[" ~
-                                prgT ~
-                                format("set(%d,0)",t) ~
-                                "[-]" ~
-                            "]" ~
-                            format("@(%d)",t) ~
-                            "[" ~
-                                format("@(%d)",-t) ~
-                                prgF ~
-                                format("@(%d)[-]",t) ~
-                            "]" ~
-                            format("@(%d)", -t-1));
-                    } else if ('(' == op[4]) { //ifeq
-                        j++;
-                        N = to!long(parseTree[j]);
-                        j+=2;
-                        t = to!long(parseTree[j]);
-                        j+=3;
-                        prgT = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
-                        j+=2;
-                        prgF = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
-                        j++;
-                        this.parseString(format("addN(%d,%d)ifelse(%d){%s}{%s} addN(%d,%d)",-N,t,t,prgF,prgT,N,t));
-                    } else if ('c' == op[4]) { //ifeqchar
-                        j++;
-                        c = to!char(parseTree[j][0]);
-                        j+=2;
-                        t = to!long(parseTree[j]);
-                        j+=3;
-                        prgT = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
-                        j+=2;
-                        prgF = ('}' == parseTree[j][0]) ? "" : parseTree[j++];
-                        j++;
-                        this.parseString(format("ifeq(%d,%d){%s}{%s}",c,t,prgF,prgT));
-                    }
-                    break;
-                case 's': //set + setchar
-                    if ('(' == op[3]) { //set
-                        j++;
-                        k = to!long(parseTree[j]);
-                        j+=2;
-                        v = to!long(parseTree[j]);
-                        j++;
-
-                        this.parseString(format("@(%d)[-]", k));
-                        opcodes ~= Opcode(1, v);
-                        this.parseString(format("@(%d)", -k));
-                    } else { //setchar
-                        j++;
-                        k = to!long(parseTree[j]);
-                        j+=2;
-                        c = to!char(parseTree[j][0]);
-                        j++;
-                        this.parseString(format("set(%d,%d)",k,c));
-                    }
-                    break;
                 default:
+                    switch (op) {
+                        case "@(":
+                            N = this.parseVar(parseTree[j+1]);
+                            opcodes ~= Opcode(2,N);
+                            j += 2;
+                            break;
+                        case "0":
+                            this.parseString("[-]");
+                            break;
+                        case "loop(":
+                            k = parseVar(parseTree[j+1]);
+                            prg = parseTree[j+4];
+                            this.parseString(format(
+                                "@(%d)[@(%d)%s@(%d)]@(%d)",
+                                    k,   -k,prg, k,   -k
+                                ));
+                            j+=5;
+                            break;
+                        case "add(":
+                            k1 = parseVar(parseTree[j+1]);
+                            k2 = parseVar(parseTree[j+3]);
+                            this.parseString(format(
+                                "loop(%d){@(%d)+@(%d)@(%d)-@(%d)}",
+                                      k1,   k2,  -k2,  k1,   -k1  
+                                ));
+                            j+=4;
+                            break;
+                        default:
+                            break;
+                    }
                     break;
             }
         }
@@ -301,6 +246,41 @@ class BrainFuck {
         return prg;
     }
 
+    private int optEmptyOpcodes() {
+        long i;
+        int optimize = 0;
+        for (i=0; i<opcodes.length-1; i++) {
+            if ((opcodes[i].code < 3) && (0 == opcodes[i].info)) {
+                opcodes = opcodes[0..i] ~ opcodes[i+1..$];
+                optimize = 1;
+            } 
+        }
+        return optimize;
+    }
+
+    private int optPlusMem() {
+        long i;
+        int optimize = 0;
+        for (i=0; i<opcodes.length-1; i++) {
+            if ((opcodes[i].code < 3) && (opcodes[i].code == opcodes[i+1].code)) {
+                opcodes[i].info += opcodes[i+1].info;
+                opcodes = opcodes[0..i+1] ~ opcodes[(i+2)..$];
+                optimize = 1;
+            }
+        }
+        return optimize;
+    }
+
+    public void optimization() {
+        long i = 0;
+        int optimize = 1;
+
+        while (optimize) {
+            optimize = this.optEmptyOpcodes();
+            optimize += this.optPlusMem();
+        }
+    }
+
     public void step() {
         switch(opcodes[IP].code) {
             case 1:
@@ -339,7 +319,6 @@ class BrainFuck {
         }
     }
 
-
     public void debugInstruction(ulong width) {
         ulong i = 0;
         ulong l = (width < IP ? IP-width : 0);
@@ -351,7 +330,6 @@ class BrainFuck {
         writef(":%d\n", r);
     }
 
-
     public void debugMemory(ulong width) {
         ulong i = 0;
         ulong l = (width < MP ? MP-width : 0);
@@ -361,11 +339,6 @@ class BrainFuck {
             writef((i == MP) ? "[%2X|%1c]" : " %2X|%1c ", mem[i], isprint(mem[i]) ? mem[i] : ' ');
         }
         writef(":%d\n", r);
-    }
-
-
-    public nothrow ulong getOpCount() {
-        return opCount;
     }
 }
 
@@ -398,59 +371,40 @@ void main() {
 
 unittest {
     int i = 0;
+    string inp = "";
     enum parseTree = Parser("+");
-    BrainFuck bf;
+    BrainFuck bf = new BrainFuck;
+    string[] tests = [
+    "@(1)",
+    "@(-1)",
+    "@()",
+    "@(0)",
+    "0",
+    "loop(1){++--}",
+    "loop(){><}",
+    "loop(){<loop(2){++}>}",
+    "add(1,2)",
+    "add(,)",
+    "add(-1,1)"
+    ];
 
     writeln("UNITTEST");
 
-    string[] inp = [
-    "+-+-><.,",
-    "++@(123)--.",
-    "++@(-12)-.",
-    "+++++++++++++++++++++++++++++++++++++++++++++--------------------------------------------->>>>>>>>>@(-1)",
-    "add(1)",
-    "add(-1)",
-    "mov(-1)",
-    "copy(12,-77)",
-    "ifelse(1){}{+}",
-    "ifelse(12){++--}{@(12)}",
-    "add(12)@(1)add(-1)",
-    "add(12)@(1)add(-1)<<.>",
-    "mov(-12)",
-    "copy(12,32)+++---.",
-    "copy(12, 22)",
-    "ifelse(2){@(12)++.[++]}{+++---.}",
-    "ifelse(2){++}{++}",
-    "ifelse(2){@(12)}{++}",
-    "ifelse(2){@(12)++.}{[+]}",
-    "ifelse(2){}{}",
-    "ifelse(2){@(12)}{ ++ }",
-    "ifelse(2){@(12)}
-    { ++ }",
-    "mov(12)",
-    "0@(1)0copy(1,2)",
-    "set(1,12)",
-    "set(7,5)0++--set(0,10)",
-    "set(0,0)",
-    "copy(0,0)",
-    "mov(0)",
-    "mov(1)",
-    "setchar(4,',')",
-    "setchar(4,'...')",
-    "setchar(-1,''')",
-    "addN(12,3)",
-    "ifeq(12,3){+++}{---}",
-    "ifeq(0,0){+}{-}"
-    "ifeqchar('c',2){+++}{---}"];
 
-    for (i=0; i<inp.length; i++) {
-        writefln("=========== Test #%d ===========",i);
-        writeln(inp[i]);
-        writeln(Parser(inp[i]).matches);
-        bf = new BrainFuck;
-        bf.parseString(inp[i]);
+    foreach(string test; tests) {
+        bf.resetState();
+        writefln("============= TEST===============");
+        writeln("   ", test);
+        writeln(Parser(test).matches);
+        bf.parseString(test);
         foreach (Opcode op;bf.opcodes) {
-            write("[",op.code,";",op.info,"]");
+            write(op.code,";",op.info,"|");
+        }
+        writeln;
+        writeln(bf.compilator());
+        bf.optimization();
+        foreach (Opcode op;bf.opcodes) {
+            write(op.code,";",op.info,"|");
         }
         writeln;
         writeln(bf.compilator());
