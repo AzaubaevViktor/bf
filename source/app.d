@@ -56,6 +56,7 @@ Parser:
 
     LoopOperand < 'loop(' Variable ')' '{' Code '}'
     LoopForOperand < 'loopfor(' Variable ',' Variable ')' '{' Code '}'
+    LoopForNOperand < 'loopforN(' Variable ')' '{' Code '}'
 
     MulOperand < 'mul(' Variable ',' Variable ',' Variable ')'
 
@@ -72,7 +73,7 @@ Parser:
     / ZeroOperand
     / AddOperand / AddSaveOperand / AddNOperand
     / SetOperand / SetNOperand
-    / LoopOperand / LoopForOperand
+    / LoopOperand / LoopForOperand / LoopForNOperand
     / MulOperand
     / CopyOperand
     / IfOperand / IfEqOperand    
@@ -122,7 +123,7 @@ class BrainFuck {
         ulong[] opCycles;
         ulong lastType = 0;
         long N = 0;
-        long k = 0, k1 = 0, k2 = 0;
+        long k = 0, k1 = 0, k2 = 0, t = 0;
         string prgT, prgF, prg;
         string[] parseTree;
 
@@ -175,6 +176,23 @@ class BrainFuck {
                         case "0":
                             this.parseString("[-]");
                             break;
+                        case "addN(":
+                            k1 = parseVar(parseTree[j+1]);
+                            N = parseVar(parseTree[j+3]);
+                            this.parseString(format("@(%d)",k1));
+                            opcodes ~= Opcode(1,N);
+                            this.parseString(format("@(%d)",-k1));
+                            j+=4;
+                            break;
+                        case "setN(":
+                            k1 = parseVar(parseTree[j+1]);
+                            N = parseVar(parseTree[j+3]);
+                            this.parseString(format(
+                                "@(%d)0@(%d)addN(%d,%d)",
+                                   k1,  -k1,     k1, N
+                                ));
+                            j+=4;
+                            break;
                         case "loop(":
                             k = parseVar(parseTree[j+1]);
                             prg = parseTree[j+4];
@@ -189,9 +207,89 @@ class BrainFuck {
                             k2 = parseVar(parseTree[j+3]);
                             this.parseString(format(
                                 "loop(%d){@(%d)+@(%d)@(%d)-@(%d)}",
-                                      k1,   k2,  -k2,  k1,   -k1  
+                                      k2,   k1,  -k1,  k2,   -k2  
                                 ));
                             j+=4;
+                            break;
+                        case "addsave(":
+                            k1 = parseVar(parseTree[j+1]);
+                            k2 = parseVar(parseTree[j+3]);
+                            t = parseVar(parseTree[j+5]);
+                            this.parseString(format(
+                                "setN(%d,0)loop(%d){@(%d)-@(%d)@(%d)+@(%d)@(%d)+@(%d)}add(%d,%d)",
+                                       t,       k2,   k2,   -k2, k1,  -k1,   t,   -t,     k2, t
+                                ));
+                            j+=6;     
+                            break;
+                        case "set(":
+                            k1 = parseVar(parseTree[j+1]);
+                            k2 = parseVar(parseTree[j+3]);
+                            this.parseString(format(
+                                "setN(%d,0)add(%d,%d)",
+                                      k1,      k1,k2
+                                ));
+                            j+=4;
+                            break;
+                        case "loopfor(":
+                            k = parseVar(parseTree[j+1]);
+                            N = parseVar(parseTree[j+3]);
+                            prg = parseTree[j+6];
+                            this.parseString(format(
+                                "setN(%d,%d)loop(%d){%s addN(%d,-1)}",
+                                       k, N,      k, prg,     k
+                                ));
+                            j+=8;
+                            break;
+                        case "loopforN(":
+                            N = parseVar(parseTree[j+1]);
+                            prg = parseTree[j+4];
+                            for (i=0; i<N; i++) {
+                                this.parseString(prg);
+                            }
+                            j+=5;
+                            break;
+                        case "mul(":
+                            k1 = parseVar(parseTree[j+1]);
+                            k2 = parseVar(parseTree[j+3]);
+                            t = parseVar(parseTree[j+5]);
+                            this.parseString(format(
+                                "loop(%d){addsave(%d,%d,%d)}",
+                                      k2,         k1,k2, t
+                                ));
+                            j+=6;
+                            break;
+                        case "copy(":
+                            k1 = parseVar(parseTree[j+1]);
+                            k2 = parseVar(parseTree[j+3]);
+                            t = parseVar(parseTree[j+5]);
+                            this.parseString(format(
+                                "setN(%d,0)addsave(%d,%d,%d)",
+                                      k1,          k1,k2, t
+                                ));
+                            j+=6;
+                            break;
+                        case "if(":
+                            k1 = parseVar(parseTree[j+1]);
+                            t = parseVar(parseTree[j+3]);
+                            prgT = parseTree[j+6];
+                            prgF = parseTree[j+9];
+                            this.parseString(format(
+                                "setN(%d,1) @(%d) [@(%d) %s addN(%d,-1) @(%d) 0] @(%d) @(%d) [@(%d) %s @(%d)] @(%d)",
+                                       t,     k1,   -k1, prgT,    t,      k1,     -k1,    t,    -t, prgF, t,    -t
+                                ));
+                            j+=10;
+                            break;
+                        case "ifeq(":
+                            k1 = parseVar(parseTree[j+1]);
+                            N = parseVar(parseTree[j+3]);
+                            t = parseVar(parseTree[j+5]);
+                            prgT = parseTree[j+8];
+                            prgF = parseTree[j+11];
+                            this.parseString(format(
+                                "addN(%d,%d)if(%d,%d){%s}{%s}",
+                                     k1,-N,   k1, t, prgF,prgT
+                                ));
+                            j+=12;
                             break;
                         default:
                             break;
@@ -202,6 +300,7 @@ class BrainFuck {
 
 
         if (0 != opCycles.length) {
+            writeln(this.compilator());
             throw new ParseError("Not closed `[`");
         }
         return 0;
@@ -246,10 +345,10 @@ class BrainFuck {
         return prg;
     }
 
-    private int optEmptyOpcodes() {
+    private int _optEmptyOpcodes() {
         long i;
         int optimize = 0;
-        for (i=0; i<opcodes.length-1; i++) {
+        for (i=0; i < opcodes.length-1; i++) {
             if ((opcodes[i].code < 3) && (0 == opcodes[i].info)) {
                 opcodes = opcodes[0..i] ~ opcodes[i+1..$];
                 optimize = 1;
@@ -258,7 +357,7 @@ class BrainFuck {
         return optimize;
     }
 
-    private int optPlusMem() {
+    private int _optPlusMem() {
         long i;
         int optimize = 0;
         for (i=0; i<opcodes.length-1; i++) {
@@ -276,8 +375,8 @@ class BrainFuck {
         int optimize = 1;
 
         while (optimize) {
-            optimize = this.optEmptyOpcodes();
-            optimize += this.optPlusMem();
+            optimize = this._optEmptyOpcodes();
+            optimize += this._optPlusMem();
         }
     }
 
@@ -385,7 +484,20 @@ unittest {
     "loop(){<loop(2){++}>}",
     "add(1,2)",
     "add(,)",
-    "add(-1,1)"
+    "add(-1,1)",
+    "setN(4,5)",
+    "setN(4,-3)",
+    "setN(2,'x')",
+    "addsave(1,2,0)",
+    "set(-1,2)",
+    "set(6,4)",
+    "loopfor(10,1){+>-<}",
+    "loopforN(10){+>--<}",
+    "mul(1,2,0)",
+    "mul(1,-1,0)",
+    "copy(1,2,3)",
+    "if(10,1){setN(0,2)}{setN(0,3)}",
+    "ifeq(10,5,1){setN(0,2)}{setN(0,3)}"
     ];
 
     writeln("UNITTEST");
