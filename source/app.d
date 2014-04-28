@@ -5,10 +5,11 @@ import std.string;
 import std.algorithm;
 import std.math;
 import core.exception;
-import core.thread;
 import std.conv;
 import core.stdc.ctype;
 import pegged.grammar;
+import std.getopt;
+import std.file;
 
 
 struct Opcode {
@@ -34,7 +35,7 @@ class ParseError : Exception {
     mixin(grammar(`
 Parser:
     Programm < Operand* 
-    Code <~ Operand* / ""
+    Code <~ Operand+ / ""
 
     Number <~ NumSign [0-9]+
     NumSign <~ '-' / ''
@@ -55,15 +56,15 @@ Parser:
     SetNOperand < 'setN(' Variable ',' Variable ')'
 
     LoopOperand < 'loop(' Variable ')' '{' Code '}'
-    LoopForOperand < 'loopfor(' Variable ',' Variable ')' '{' Code '}'
+    LoopForOperand < 'loopfor(' Variable ')' '{' Code '}'
     LoopForNOperand < 'loopforN(' Variable ')' '{' Code '}'
 
-    MulOperand < 'mul(' Variable ',' Variable ',' Variable ')'
+    MulOperand < 'mul(' Variable ',' Variable ',' Variable ',' Variable ')'
 
     CopyOperand < 'copy(' Variable ',' Variable ',' Variable ')'
 
     IfOperand < 'if(' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
-    IfEqOperand < 'ifeq(' Variable ',' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
+    IfEqNOperand < 'ifeq(' Variable ',' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
 
     Char <~ .
     Variable <~ Number / "'" Char "'" / ""
@@ -76,19 +77,8 @@ Parser:
     / LoopOperand / LoopForOperand / LoopForNOperand
     / MulOperand
     / CopyOperand
-    / IfOperand / IfEqOperand    
+    / IfOperand / IfEqNOperand    
 `));
-
-
-class NotOptimised {
-    private char[30000] mem = 0;
-    private ulong IP = 0;
-    private ulong MP = 0;
-    private Opcode[] opcodes;
-    private ulong opCount = 0;
-
-    this() {}
-}
 
 
 class BrainFuck {
@@ -123,7 +113,7 @@ class BrainFuck {
         ulong[] opCycles;
         ulong lastType = 0;
         long N = 0;
-        long k = 0, k1 = 0, k2 = 0, t = 0;
+        long k = 0, k1 = 0, k2 = 0, t = 0, t1 = 0;
         string prgT, prgF, prg;
         string[] parseTree;
 
@@ -231,14 +221,13 @@ class BrainFuck {
                             j+=4;
                             break;
                         case "loopfor(":
-                            k = parseVar(parseTree[j+1]);
-                            N = parseVar(parseTree[j+3]);
-                            prg = parseTree[j+6];
+                            k1 = parseVar(parseTree[j+1]);
+                            prg = parseTree[j+4];
                             this.parseString(format(
-                                "setN(%d,%d)loop(%d){%s addN(%d,-1)}",
-                                       k, N,      k, prg,     k
+                                "loop(%d){%s addN(%d,-1)}",
+                                      k1, prg,    k1
                                 ));
-                            j+=8;
+                            j+=10;
                             break;
                         case "loopforN(":
                             N = parseVar(parseTree[j+1]);
@@ -252,11 +241,12 @@ class BrainFuck {
                             k1 = parseVar(parseTree[j+1]);
                             k2 = parseVar(parseTree[j+3]);
                             t = parseVar(parseTree[j+5]);
+                            t1 = parseVar(parseTree[j+7]);
                             this.parseString(format(
-                                "loop(%d){addsave(%d,%d,%d)}",
-                                      k2,         k1,k2, t
+                                "copy(%d,%d,%d)addN(%d,-1)loopfor(%d){addsave(%d,%d,%d)}",
+                                      t1,k1,t,      k2,           k2,         k1,t1, t
                                 ));
-                            j+=6;
+                            j+=8;
                             break;
                         case "copy(":
                             k1 = parseVar(parseTree[j+1]);
@@ -274,12 +264,12 @@ class BrainFuck {
                             prgT = parseTree[j+6];
                             prgF = parseTree[j+9];
                             this.parseString(format(
-                                "setN(%d,1) @(%d) [@(%d) %s addN(%d,-1) @(%d) 0] @(%d) @(%d) [@(%d) %s @(%d)] @(%d)",
+                                "setN(%d,1) @(%d) [@(%d) %s addN(%d,-1) @(%d) 0] @(%d) @(%d) [@(%d) %s @(%d) 0] @(%d)",
                                        t,     k1,   -k1, prgT,    t,      k1,     -k1,    t,    -t, prgF, t,    -t
                                 ));
                             j+=10;
                             break;
-                        case "ifeq(":
+                        case "ifeqN(":
                             k1 = parseVar(parseTree[j+1]);
                             N = parseVar(parseTree[j+3]);
                             t = parseVar(parseTree[j+5]);
@@ -442,28 +432,51 @@ class BrainFuck {
 }
 
 
-void main() {
-    //BrainFuck bf = new BrainFuck;
-    ////" ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++ .>+.+++++++..+++.>++.<<+++++++++++++++.>.+++. ------.--------.>+.>.";
-    //try {
-    //    bf.parseString("+++++@(-1)----->>>>><<<<<@(10)");
-    //    } catch (ParseError e) {
-    //        writeln(e.str);
-    //        return;
-    //    }
+void main(string[] args) {
+    BrainFuck bf = new BrainFuck;
+    string optCode = "";
+    bool debugmem = false;
+    bool debugcode = false;
+    string file;
+    string text;
 
-    //while (1) {
-    //    try {
-    //        bf.step();
-    //    } catch (ProgrammEnd e) {
-    //        writeln("ProgrammEnd");
-    //        break;
-    //    } finally {
-    //     bf.debugInstruction(10);
-    //     bf.debugMemory(10);
-    //     Thread.sleep(dur!("msecs")(90));
-    //    }
-    //}
+    getopt(args,
+        "debugmem|m", &debugmem,
+        "debugop|o", &debugcode,
+        "file|f", &file,
+        "text|t", &text
+        );
+
+
+    try {
+        if (file) {
+            text = chomp(readText(file));
+        }
+        if (text) {
+            bf.parseString(text);
+        } 
+        } catch (ParseError e) {
+            writeln(e.str);
+            return;
+        }
+
+    bf.optimization();
+    optCode = bf.compilator();
+    bf.resetState();
+    bf.parseString(optCode);
+    writeln(bf.compilator());
+
+    while (1) {
+        try {
+            bf.step();
+        } catch (ProgrammEnd e) {
+            writeln("ProgrammEnd");
+            break;
+        } finally {
+         if (debugcode) bf.debugInstruction(10);
+         if (debugmem) bf.debugMemory(10);
+        }
+    }
 
 }
 
@@ -491,13 +504,16 @@ unittest {
     "addsave(1,2,0)",
     "set(-1,2)",
     "set(6,4)",
-    "loopfor(10,1){+>-<}",
+    "loopfor(10){+>-<}",
     "loopforN(10){+>--<}",
-    "mul(1,2,0)",
-    "mul(1,-1,0)",
+    "mul(4,5,0,1)",
+    "mul(1,-1,5,6)",
     "copy(1,2,3)",
     "if(10,1){setN(0,2)}{setN(0,3)}",
-    "ifeq(10,5,1){setN(0,2)}{setN(0,3)}"
+    "ifeq(10,5,1){setN(0,2)}{setN(0,3)}",
+    "loopfor(4){addN(2,1)}{}",
+    "setN(1,10)if(1,0){setN(2,10)}{}",
+    "if(1,0){setN(2,2)}{setN(2,-1)}"
     ];
 
     writeln("UNITTEST");
