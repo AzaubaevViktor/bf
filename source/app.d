@@ -66,6 +66,11 @@ Parser:
     IfOperand < 'if(' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
     IfEqNOperand < 'ifeq(' Variable ',' Variable ',' Variable ')' '{' Code '}' '{' Code '}'
 
+    WriteOperand < 'write(' Variable ')'
+    ReadOperand < 'readTo(' Variable ')'
+
+    Comment <~ '#' .+ '#'
+
     Char <~ .
     Variable <~ Number / "'" Char "'" / ""
 
@@ -77,7 +82,9 @@ Parser:
     / LoopOperand / LoopForOperand / LoopForNOperand
     / MulOperand
     / CopyOperand
-    / IfOperand / IfEqNOperand    
+    / IfOperand / IfEqNOperand
+    / WriteOperand / ReadOperand
+    / Comment
 `));
 
 
@@ -90,7 +97,6 @@ class BrainFuck {
     private int inputMode = 0;
 
     this(int inputMode) {
-        writeln("111");
         this.inputMode = inputMode;
     }
 
@@ -286,6 +292,19 @@ class BrainFuck {
                                 ));
                             j+=12;
                             break;
+                        case "write(":
+                            k = parseVar(parseTree[j+1]);
+                            opcodes ~= Opcode(2,k);
+                            opcodes ~= Opcode(5,0);
+                            opcodes ~= Opcode(2,-k);
+                            j+=2;
+                            break;
+                        case "readTo(":
+                            k = parseVar(parseTree[j+1]);
+                            opcodes ~= Opcode(2,k);
+                            opcodes ~= Opcode(6,0);
+                            opcodes ~= Opcode(2,-k);
+                            break;
                         default:
                             break;
                     }
@@ -377,14 +396,17 @@ class BrainFuck {
 
     public char inputMode0() {
         static string cache = "";
+        static long len = 0;
         char ch = 0;
-        if (0 != cache.length) {
+        if (0 != len) {
             ch = cache[0];
             cache = cache[1..$];
+            len--;
             return ch;
         } else {
             write("\n>");
-            cache = chomp(readln());
+            cache = chomp(readln()) ~ '\0';
+            len = cache.length + 1;
             return inputMode0();
         }
 
@@ -455,6 +477,10 @@ class BrainFuck {
 }
 
 
+class BrainFuckAsm {
+    this () {}
+}
+
 void main(string[] args) {
     BrainFuck bf;
     string optCode = "";
@@ -490,20 +516,17 @@ void main(string[] args) {
     optCode = bf.compilator();
     bf.resetState();
     bf.parseString(optCode);
-    writeln(bf.compilator());
 
     while (1) {
         try {
             bf.step();
         } catch (ProgrammEnd e) {
-            writeln("ProgrammEnd");
             break;
         } finally {
          if (debugcode) bf.debugInstruction(10);
          if (debugmem) bf.debugMemory(10);
         }
     }
-
 }
 
 
@@ -511,7 +534,7 @@ unittest {
     int i = 0;
     string inp = "";
     enum parseTree = Parser("+");
-    BrainFuck bf = new BrainFuck;
+    BrainFuck bf = new BrainFuck(0);
     string[] tests = [
     "@(1)",
     "@(-1)",
@@ -539,7 +562,9 @@ unittest {
     "ifeq(10,5,1){setN(0,2)}{setN(0,3)}",
     "loopfor(4){addN(2,1)}{}",
     "setN(1,10)if(1,0){setN(2,10)}{}",
-    "if(1,0){setN(2,2)}{setN(2,-1)}"
+    "if(1,0){setN(2,2)}{setN(2,-1)}",
+    "# #",
+    "# azazaazza #"
     ];
 
     writeln("UNITTEST");
