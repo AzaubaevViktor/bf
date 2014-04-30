@@ -87,8 +87,12 @@ class BrainFuck {
     private ulong MP = 0;
     private Opcode[] opcodes;
     private ulong opCount = 0;
+    private int inputMode = 0;
 
-    this() {}
+    this(int inputMode) {
+        writeln("111");
+        this.inputMode = inputMode;
+    }
 
     public void resetState() {
         this.mem[0..30000] = 0;
@@ -120,6 +124,7 @@ class BrainFuck {
         foreach(int j, string op; Parser(str).matches) {
             parseTree ~= op;
         }
+
 
         for(int j; j<parseTree.length; j++) {
             string op = parseTree[j];
@@ -277,7 +282,7 @@ class BrainFuck {
                             prgF = parseTree[j+11];
                             this.parseString(format(
                                 "addN(%d,%d)if(%d,%d){%s}{%s}",
-                                     k1,-N,   k1, t, prgF,prgT
+                                      k1,-N,   k1, t, prgF,prgT
                                 ));
                             j+=12;
                             break;
@@ -370,6 +375,21 @@ class BrainFuck {
         }
     }
 
+    public char inputMode0() {
+        static string cache = "";
+        char ch = 0;
+        if (0 != cache.length) {
+            ch = cache[0];
+            cache = cache[1..$];
+            return ch;
+        } else {
+            write("\n>");
+            cache = chomp(readln());
+            return inputMode0();
+        }
+
+    }
+
     public void step() {
         switch(opcodes[IP].code) {
             case 1:
@@ -396,6 +416,9 @@ class BrainFuck {
                 write(mem[MP]);
                 break;
             case 6:
+                if (0 == inputMode) {
+                    mem[MP] = inputMode0();
+                }
                 break;
 
             default:
@@ -433,20 +456,23 @@ class BrainFuck {
 
 
 void main(string[] args) {
-    BrainFuck bf = new BrainFuck;
+    BrainFuck bf;
     string optCode = "";
     bool debugmem = false;
     bool debugcode = false;
     string file;
     string text;
+    int inputMode = 0;
 
     getopt(args,
         "debugmem|m", &debugmem,
         "debugop|o", &debugcode,
         "file|f", &file,
-        "text|t", &text
+        "text|t", &text,
+        "inputmode|i", &inputMode
         );
 
+    bf = new BrainFuck(inputMode);
 
     try {
         if (file) {

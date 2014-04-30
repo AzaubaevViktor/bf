@@ -1,0 +1,804 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"debu",
+				"debugcode"
+			],
+			[
+				"pa",
+				"parseString"
+			],
+			[
+				"loopf",
+				"loopfor"
+			],
+			[
+				"op",
+				"optCode"
+			],
+			[
+				"opt",
+				"optCode"
+			],
+			[
+				"set",
+				"setN"
+			],
+			[
+				"Loo",
+				"LoopForNOperand"
+			],
+			[
+				"loop",
+				"loopfor"
+			],
+			[
+				"adds",
+				"addsave"
+			],
+			[
+				"fo",
+				"format"
+			],
+			[
+				"opc",
+				"opcodes"
+			],
+			[
+				"opco",
+				"opcodes"
+			],
+			[
+				"re",
+				"resetState"
+			],
+			[
+				"If",
+				"IfEqCharOperand"
+			],
+			[
+				"ifeq",
+				"ifeqchar"
+			],
+			[
+				"prg",
+				"prgT"
+			],
+			[
+				"add",
+				"addN"
+			],
+			[
+				"str",
+				"string"
+			],
+			[
+				"Set",
+				"SetCharOperator"
+			],
+			[
+				"Op",
+				"Opcode"
+			],
+			[
+				"Pa",
+				"parseString"
+			],
+			[
+				"pr",
+				"prgF"
+			],
+			[
+				"for",
+				"format"
+			],
+			[
+				"ifel",
+				"ifelse"
+			],
+			[
+				"s",
+				"string"
+			],
+			[
+				"Opc",
+				"Opcode"
+			],
+			[
+				"par",
+				"parseString"
+			],
+			[
+				"write",
+				"writeln"
+			],
+			[
+				"un",
+				"unittest"
+			],
+			[
+				"B",
+				"BlankChars"
+			],
+			[
+				"Num",
+				"Number"
+			],
+			[
+				"Nu",
+				"Number"
+			],
+			[
+				"Ad",
+				"AddOperand"
+			],
+			[
+				"N",
+				"Number"
+			],
+			[
+				"Mem",
+				"MemRightOptimise"
+			],
+			[
+				"M",
+				"MemExplore"
+			],
+			[
+				"nu",
+				"Number"
+			],
+			[
+				"ma",
+				"matches"
+			],
+			[
+				"pas",
+				"parseTree1"
+			],
+			[
+				"wri",
+				"writeln"
+			],
+			[
+				"th",
+				"throw"
+			],
+			[
+				"de",
+				"debugInstruction"
+			],
+			[
+				"b",
+				"break"
+			],
+			[
+				"bra",
+				"break"
+			],
+			[
+				"pi",
+				"public"
+			],
+			[
+				"feed",
+				"feed-add-bit"
+			],
+			[
+				"IS",
+				"IS_EQ_STR"
+			],
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"int",
+				"int16_t"
+			],
+			[
+				"get",
+				"getMaxCoord"
+			],
+			[
+				"getmi",
+				"getMinMiddle"
+			],
+			[
+				"min",
+				"minIndex"
+			],
+			[
+				"getMin",
+				"getMinCoord"
+			],
+			[
+				"max",
+				"maxLevel"
+			],
+			[
+				"padding",
+				"padding-top"
+			],
+			[
+				"hello",
+				"hellobutton"
+			],
+			[
+				"MA",
+				"MAXACCURANCY"
+			],
+			[
+				"is",
+				"isright"
+			],
+			[
+				"iss",
+				"issue"
+			],
+			[
+				"su",
+				"success_attack_probablity"
+			],
+			[
+				"a",
+				"attack"
+			],
+			[
+				"_ge",
+				"_get_attack_damage"
+			],
+			[
+				"ge",
+				"_get_combo"
+			],
+			[
+				"DM",
+				"DAMAGEISSUEFACTOR"
+			],
+			[
+				"DAMA",
+				"DAMAGEMAX"
+			],
+			[
+				"MAX",
+				"MAXHEALTH"
+			],
+			[
+				"disp",
+				"disperse"
+			],
+			[
+				"le",
+				"lenght"
+			],
+			[
+				"DA",
+				"DAMAGEMIN"
+			],
+			[
+				"DAM",
+				"DAMAGEMAX"
+			],
+			[
+				"PROTE",
+				"PROTECTIONMIN"
+			],
+			[
+				"p",
+				"persons"
+			],
+			[
+				"rand",
+				"randint"
+			],
+			[
+				"sel",
+				"selection"
+			],
+			[
+				"ed",
+				"edge_num"
+			],
+			[
+				"e",
+				"edge_num"
+			],
+			[
+				"num",
+				"num_comp"
+			],
+			[
+				"hash",
+				"hashlst"
+			],
+			[
+				"sum",
+				"sumTime"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app.d",
+			"settings":
+			{
+				"buffer_size": 16751,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/D/D.sublime-build",
+	"command_palette":
+	{
+		"height": 200.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/ktulhy/install/Fallout 2 (US)/FALLOUT2.bin",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/source/app.d",
+		"/home/ktulhy/YandexDisk/programms/python/brainfuck/habr_tailor_fuck",
+		"/home/ktulhy/YandexDisk/programms/python/brainfuck/getcomm",
+		"/home/ktulhy/YandexDisk/programms/python/brainfuck/test.bf",
+		"/home/ktulhy/YandexDisk/programms/python/brainfuck/bf_new.py",
+		"/home/ktulhy/YandexDisk/programms/python/brainfuck/думаем над bf",
+		"/home/ktulhy/YandexDisk/programms/python/brainfuck/text_ezot.py",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/wc.b",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/dvorak.b",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/triangle.bf",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/gameoflife.b",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/fibo7.b",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/tests.b",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/readme.md",
+		"/home/ktulhy/Documents/Протокол",
+		"/home/ktulhy/YandexDisk/programms/dlang/bf/test.txt",
+		"/home/ktulhy/YandexDisk/текст",
+		"/home/ktulhy/YandexDisk/programms/dlang/hello.d",
+		"/home/ktulhy/YandexDisk/PycharmProjects/convertor/strat.sh",
+		"/home/ktulhy/YandexDisk/PycharmProjects/convertor/TODO.md",
+		"/home/ktulhy/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/ktulhy/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/ktulhy/.config/sublime-text-3/Packages/User/Distraction Free.sublime-settings",
+		"/home/ktulhy/.config/sublime-text-3/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/ktulhy/.config/sublime-text-3/Packages/User/D.sublime-settings",
+		"/home/ktulhy/.cache/.fr-0GeDiH/mimetype",
+		"/boot/grub/grub.cfg",
+		"/boot/grub/gfxblacklist.txt",
+		"/boot/grub/fonts/unicode.pf2",
+		"/home/ktulhy/.config/sublime-text-3/Packages/User/Dlang.sublime-build",
+		"/home/ktulhy/YandexDisk/projects/bits/site/js/main.js",
+		"/home/ktulhy/YandexDisk/projects/bits/site/css/main.css",
+		"/home/ktulhy/YandexDisk/projects/bits/site/index.html",
+		"/home/ktulhy/Documents/отчёт ",
+		"/home/ktulhy/YandexDisk/PycharmProjects/convertor/convert.py",
+		"/usr/local/lib/python3.3/dist-packages/ezodf/document.py",
+		"/home/ktulhy/Desktop/Untitled Document",
+		"/home/ktulhy/Desktop/cutys",
+		"/home/ktulhy/Desktop/ .desktop",
+		"/home/ktulhy/.vnc/xstartup",
+		"/media/ktulhy/Ktulhy-kun/.disk/base_installable",
+		"/media/ktulhy/Ktulhy-kun/.disk/info",
+		"/home/ktulhy/helpterm/password",
+		"/home/ktulhy/.bash_profile",
+		"/home/ktulhy/.bash_history",
+		"/media/ktulhy/Ktulhy-kun/.bash_history",
+		"/home/ktulhy/YandexDisk/План",
+		"/home/ktulhy/YandexDisk/Documents/Паста про депривацию сна",
+		"/home/ktulhy/test.c",
+		"/home/ktulhy/hs_err_pid5596.log",
+		"/home/ktulhy/hs",
+		"/home/ktulhy/hd",
+		"/home/ktulhy/Документы/Пароли",
+		"/media/ktulhy/Ktulhy-kun/Разобрать/documents/айди.txt",
+		"/media/ktulhy/Ktulhy-kun/Разобрать/documents/Краткий конспект по python.txt",
+		"/media/ktulhy/Ktulhy-kun/Разобрать/documents/Memo.txt",
+		"/media/ktulhy/Ktulhy-kun/Разобрать/documents/Memo(1).txt",
+		"/media/ktulhy/Ktulhy-kun/Изображения/cd",
+		"/media/ktulhy/Ktulhy-kun/Изображения/ULr1NJ68sXE.jpg.xmp",
+		"/media/ktulhy/Ktulhy-kun/Документы/i2p",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/квн",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/новый файл (копия)",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/Под гитару",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/ЧТО НУЖНО",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/новый файл",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/ессе",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/Rhode Island",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/Безымянный документ",
+		"/media/ktulhy/Ktulhy-kun/Документы/Текстовые документы/ololo",
+		"/media/ktulhy/Ktulhy-kun/Документы/схемы/генератор незатухающих колебаний на транзисторе.sch",
+		"/media/ktulhy/Ktulhy-kun/Документы/КВН, цилей/сессия_КВН",
+		"/media/ktulhy/Ktulhy-kun/Документы/КВН, цилей/песня",
+		"/media/ktulhy/Ktulhy-kun/Документы/КВН, цилей/Песня на посвящение alpha.txt",
+		"/media/ktulhy/Ktulhy-kun/Документы/КВН, цилей/на квн?",
+		"/media/ktulhy/Ktulhy-kun/Документы/КВН, цилей/кофе мой друг",
+		"/media/ktulhy/Ktulhy-kun/Документы/Архив/Прочитанные книги",
+		"/media/ktulhy/Ktulhy-kun/Документы/Архив/новый файл",
+		"/media/ktulhy/Ktulhy-kun/Документы/Архив/Вконтактик просит капчу",
+		"/media/ktulhy/Ktulhy-kun/Документы/Архив/Звбыл что яндекс",
+		"/media/ktulhy/Ktulhy-kun/Документы/Архив/Кричалки",
+		"/media/ktulhy/Ktulhy-kun/Витя/Текстовый документ.txt",
+		"/media/ktulhy/Ktulhy-kun/Витя/Приколы.txt",
+		"/home/ktulhy/_encfs.py",
+		"/home/ktulhy/_encfs.sh",
+		"/home/ktulhy/Documents/test.csv",
+		"/home/ktulhy/Documents/еуые.tsv",
+		"/home/ktulhy/Documents/converter.py",
+		"/home/ktulhy/.gnome2/accels/nemo",
+		"/home/ktulhy/Documents/pp.txt",
+		"/home/ktulhy/rapoo.sh",
+		"/home/ktulhy/Dropbox/Шпаргалки/Символы",
+		"/home/ktulhy/Dropbox/projects/bits/site/js/main.js",
+		"/home/ktulhy/Dropbox/projects/bits/site/index.html",
+		"/home/ktulhy/Dropbox/projects/bits/API.md",
+		"/etc/pulse/daemon.conf",
+		"/etc/acpi/events/powerbtn",
+		"/etc/acpi/powerbtn.sh",
+		"/etc/systemd/logind.conf",
+		"/home/ktulhy/workspaceSTM/test/Release/test.bin",
+		"/home/ktulhy/ARMToolchain/openocd-code-075/README",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140318_005320.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140318_004457.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140318_004330.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140318_005419.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140318_004535.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_030215.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_030025.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_030007.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025937.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_030231.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025852.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025638.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025622.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025536.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025309.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025221.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025148.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025100.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_025035.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_024952.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_024703.log",
+		"/home/ktulhy/Dropbox/programms/c_универ/build-hare-C99-Debug/20140317_024409.log",
+		"/home/ktulhy/Dropbox/projects/beats/site/index.html",
+		"/home/ktulhy/Dropbox/projects/beats/site/style.css",
+		"/home/ktulhy/Dropbox/projects/beats/site/script.js",
+		"/home/ktulhy/install/sunvox/sunvox/linux_x86/sunvox",
+		"/home/ktulhy/Documents/Keys.txt"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"set",
+			"Programm",
+			"set",
+			"self",
+			"num",
+			"\"",
+			"'",
+			"indent",
+			"rein",
+			"str",
+			"htmlFee",
+			"console.group",
+			"id",
+			"signIn",
+			"_send",
+			"md5s",
+			"wo",
+			"\\r",
+			"__logging_file",
+			"logging",
+			"main",
+			"\\n\\n",
+			"\"\",",
+			"font",
+			"deb http://",
+			"deb",
+			"getdeb",
+			"medibun",
+			" ",
+			"!",
+			"\\(",
+			" ",
+			"П ",
+			"О",
+			"Л ",
+			" ",
+			"ник ",
+			"вна ",
+			"вич ",
+			" ",
+			"\\?",
+			"Л ",
+			"П ",
+			" ",
+			"лица ",
+			"ник ",
+			"вна ",
+			"вич ",
+			"вич",
+			" ",
+			"\\?",
+			"П\\n",
+			"О",
+			"Л\\n",
+			" ",
+			"ф",
+			" ",
+			"ф",
+			"Проживающий без оплаты ",
+			"Прочие лица ",
+			"Сотрудник ",
+			"платник ",
+			"бюджетник ",
+			"вна ",
+			"вич ",
+			"вич",
+			"мешалк",
+			"кравч",
+			"?",
+			"Л",
+			"П\\n",
+			"О",
+			"ф",
+			" ",
+			"\\n ",
+			"платник",
+			"лица",
+			"НГУ",
+			"проживающих",
+			"бюджетник",
+			"[а-яА-Я]*[ ][а-яА-Я]*[ ][а-яА-Я]*[ ]",
+			"Решетова",
+			".*[ ].*[ ].*",
+			"_issue_fail",
+			"success_probablity",
+			"\n",
+			"two_in_k",
+			"          ",
+			"ident",
+			"space",
+			"	",
+			"z",
+			"z = copy.copy(x)\n",
+			"	"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"Code",
+			"this",
+			"k",
+			"'",
+			"\"",
+			"\\n",
+			"## deb http://",
+			"##deb",
+			",",
+			"/",
+			"\\n",
+			"/n",
+			"П",
+			"0",
+			"1/",
+			"\\n",
+			"ник\\n",
+			"вна\\n",
+			"вич\\n",
+			"\\n",
+			"7",
+			"1/",
+			"П",
+			"\\n",
+			"лица\\n",
+			"ник\\n",
+			"вна\\n",
+			"вич\\n",
+			"\\n",
+			"7",
+			"П",
+			"0",
+			"/1",
+			"\\n",
+			"Ф",
+			"\\n",
+			"Ф",
+			"Проживающий без оплаты\\n",
+			"Прочие лица\\n",
+			"Сотрудник\\n",
+			"бюджетник\\n",
+			"вна\\n",
+			"вич\\n",
+			"7",
+			"/1",
+			"П",
+			"0",
+			"Ф",
+			"\\n",
+			"платник\\n",
+			"лица\\n",
+			"НГУ\\n",
+			"проживающих\\n",
+			"бюджетник\\n",
+			"*\\n",
+			"[а-яА-Я]*[ ][а-яА-Я]*[ ][а-яА-Я]*[\\n]"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app.d",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16751,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								449,
+								449
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/D/D.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 459.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 106.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "bf.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 75.0,
+		"selected_items":
+		[
+			[
+				"pas",
+				"parseString"
+			],
+			[
+				"pa",
+				"ParseError"
+			],
+			[
+				"",
+				"parseString"
+			]
+		],
+		"width": 392.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
